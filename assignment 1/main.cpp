@@ -91,7 +91,7 @@ int main() {
                     for (int j=0; j<path.size(); j++) {
                         cout << graph[path[j]].name << " ";
                         accrue += graph[path[j]].value;
-                    } 
+                    }
                     cout << "Value=" << accrue << endl;
                     path.clear();
                     if (accrue >= target) {
