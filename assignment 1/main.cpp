@@ -27,22 +27,21 @@ bool dfs(int curr, int depth, vector<int>& path) {
     if (depth == 0) {
         return true;
     }
-    // if we still have jumps left
     else if (depth > 0) {
-        path.push_back(curr);
         for (int i=curr+1; i<graph.size(); i++) {
-            bool neighbor_found = false;
+            bool neighbor_of_curr = false;
             for (int j=0; j<graph[curr].neighbors.size(); j++) {
                 if (i == graph[curr].neighbors[j]) {
-                    neighbor_found = true;
+                    neighbor_of_curr = true;
                     break;
                 }
             }
-            if (neighbor_found) continue;
-            else if (!graph[i].visited) {
+            if (neighbor_of_curr == true) continue;
+            if (!graph[i].visited) {
+                graph[i].visited = true;
+                path.push_back(i);
                 dfs(i, --depth, path);
             }
-            continue;
         }
     }
     return true;
@@ -86,26 +85,26 @@ int main() {
             cout << "Depth:" << depth << endl;
             int accrue = 0;
             for (int i=0; i<graph.size(); i++) {
-                if (dfs(i, depth, path)) {
-                    accrue = 0;
-                    for (int j=0; j<path.size(); j++) {
-                        cout << graph[path[j]].name << " ";
-                        accrue += graph[path[j]].value;
-                    }
-                    cout << "Value=" << accrue << endl;
-                    path.clear();
-                    if (accrue >= target) {
-                        cout << "Solution found." << endl;
-                        break;
-                    }
-                }
-                for (int j=0; j<graph.size(); j++) {
-                    graph[j].visited = false;
-                }
+                for (int j=0; j<graph.size()-i; j++) {
+                    if (dfs(i, depth, path)) {
+                        cout << graph[i].name << " ";
+                        accrue += graph[i].value;
+                        for (int k=0; k<path.size(); k++) {
+                            cout << graph[path[k]].name << " ";
+                            accrue += graph[path[k]].value;
+                        }
+                        cout << "Value=" << accrue << endl;
+                        path.clear();
+                        if (accrue >= target) {
+                            cout << "Solution found." << endl;
+                            break;
+                        }
+                    } if (accrue >= target) break;
+                } if (accrue >= target) break;
             }
-            if (accrue >= target) {
-                break;
-            }
+            for (int j=0; j<graph.size(); j++) {
+                graph[j].visited = false;
+            } if (accrue >= target) break;
         }
     }
     return 0;
