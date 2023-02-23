@@ -27,7 +27,7 @@ bool dfs(int curr, int depth, vector<int>& path) {
     else {
         path.push_back(curr);
         graph[curr].visited = true;
-        for (int i=curr; i<graph.size(); i++) {
+        for (int i=curr+1; i<graph.size(); i++) {
             bool is_neighbor = false;
             for (int j=0; j<graph[curr].neighbors.size(); j++) {
                 if (graph[curr].neighbors[j] == i) {
@@ -80,6 +80,7 @@ int main() {
         for (int depth=0; depth<=graph.size(); depth++) {
             cout << "Depth:" << depth+1 << endl;
             for (int i=0; i<graph.size(); i++) {
+                if (graph[i].visited) continue;
                 if (dfs(i, depth, path)) {
                     int accrue = 0;
                     for (int j=0; j<path.size(); j++) {
