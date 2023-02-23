@@ -27,21 +27,18 @@ bool dfs(int curr, int depth, vector<int>& path) {
     if (depth == 0) {
         return true;
     }
-    else if (depth > 0) {
-        for (int i=curr+1; i<graph.size(); i++) {
-            bool neighbor_of_curr = false;
-            for (int j=0; j<graph[curr].neighbors.size(); j++) {
-                if (i == graph[curr].neighbors[j]) {
-                    neighbor_of_curr = true;
-                    break;
-                }
+    for (int i=curr+1; i<graph.size(); i++) {
+        bool neighbor_of_curr = false;
+        for (int j=0; j<graph[curr].neighbors.size(); j++) {
+            if (i == graph[curr].neighbors[j]) {
+                neighbor_of_curr = true;
+                break;
             }
-            if (neighbor_of_curr == true) continue;
-            if (!graph[i].visited) {
-                graph[i].visited = true;
-                path.push_back(i);
-                dfs(i, --depth, path);
-            }
+        }
+        if (!graph[i].visited && !neighbor_of_curr) {
+            graph[i].visited = true;
+            path.push_back(i);
+            dfs(i, depth-1, path);
         }
     }
     return true;
