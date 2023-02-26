@@ -22,15 +22,46 @@ public:
 
 vector<Node> graph;
 
+//void dfs(int curr, int depth, vector<int>& path) {
+//    path.push_back(curr);
+//    for (int i=curr+1; i<graph.size(); i++) {
+//        bool neighbor = false;
+//        for (int j=0; j<graph[i].neighbors.size(); j++) {
+//            for (int k=0; k<path.size(); k++) {
+//                if (path[k] == i) {
+//                    neighbor = true;
+//                    break;
+//                }
+//            }
+//        }
+//        if (!neighbor) path.push_back(i);
+//        if (path.size() > depth) return;
+//    }
+//    return;
+//}
+
 bool dfs(int curr, int depth, vector<int>& path) {
+    if (path.size() == depth) {
+        return true;
+    }
     path.push_back(curr);
-    while (path.size()<=depth) {
-        for (int i=0; i<path.size(); i++) {
-            if (!(find(graph[path[i]].neighbors.begin(), graph[path[i]].neighbors.end(), curr+1) != graph[path[i]].neighbors.end()))
-                dfs(curr+1, depth, path);
+    for (int i=0; i<graph[curr].neighbors.size(); i++) {
+        int neighbor = graph[curr].neighbors[i];
+        bool is_neighbor = false;
+        for (int j=0; j<path.size()-1; j++) {
+            if (graph[path[j]].name == graph[neighbor].name) {
+                cout << "dfs reached " << graph[path[j]].name << " " << graph[neighbor].name << endl;
+                is_neighbor = true;
+                break;
+            }
+        }
+        if (!is_neighbor) {
+            if (dfs(neighbor, depth, path)) {
+                return true;
+            }
         }
     }
-    return true;
+    return false;
 }
 
 
@@ -66,24 +97,22 @@ int main() {
             graph[v].neighbors.push_back(u);
         }
     }
+    
     vector<int> path;
-    if (flag == "V") {
-        for (int depth=0; depth<=graph.size(); depth++) {
-            cout << "Depth:" << depth+1 << endl;
-            for (int i=0; i<graph.size(); i++) {
-                int accrue = 0;
-                if (dfs(i, depth, path)) {
-                    for (int j=0; j<path.size(); j++) {
-                        cout << graph[path[j]].name << " ";
-                        accrue += graph[path[j]].value;
-                    }
-                    cout << "Value=" << accrue << endl;
-                    if (accrue >= target) {
-                        cout << "Solution found." << endl;
-                        return 0;
-                    }
-                    path.clear();
-                }
+    for (int depth=1; depth<=graph.size(); depth++) {
+        cout << "Depth:" << depth << endl;
+        for (int i=0; i<graph.size(); i++) {
+            int accrue = 0;
+            path.clear();
+            dfs(i, depth, path);
+            for (int j=0; j<path.size(); j++) {
+                cout << graph[path[j]].name << " ";
+                accrue += graph[path[j]].value;
+            }
+            cout << "Value=" << accrue << endl;
+            if (accrue >= target) {
+                cout << "Solution found." << endl;
+                return 0;
             }
         }
     }
