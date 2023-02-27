@@ -51,23 +51,40 @@ void dfs_utility(int curr, vector<int>& path, int depth) {
     }
 }
 
-void dfs(vector<int>& path, int target) {
+void dfs(vector<int>& path, int target, string flag) {
     bool solution_found = false;
     for (int depth=1; depth<graph.size(); depth++) {
         cout << "Depth:" << depth << endl;
         for (int i=0; i<graph.size(); i++) {
             dfs_utility(i, path, depth);
             int accrue = 0;
-            for (int j=0; j<path.size(); j++) {
-                cout << graph[path[j]].name << " ";
-                accrue += graph[path[j]].value;
+            if (flag == "V") {
+                for (int j=0; j<path.size(); j++) {
+                    cout << graph[path[j]].name << " ";
+                    accrue += graph[path[j]].value;
+                }
+                cout << "Value=" << accrue << endl;
+                if (accrue >= target) {
+                    cout << "Solution found" << endl;
+                    solution_found = true;
+                    break;
+                }
             }
-            cout << "Value=" << accrue << endl;
-            if (accrue >= target) {
-                cout << "Solution found" << endl;
-                solution_found = true;
-                break;
+            else if (flag == "C") {
+                for (int j=0; j<path.size(); j++) {
+                    accrue += graph[path[j]].value;
+                }
+                if (accrue >= target) {
+                    for (int j=0; j<path.size(); j++) {
+                        cout << graph[path[j]].name << " ";
+                    }
+                    cout << "Value=" << accrue << endl;
+                    cout << "Solution found" << endl;
+                    solution_found = true;
+                    break;
+                }
             }
+           
             path.clear();
         }
         if (solution_found) {
@@ -111,7 +128,7 @@ int main() {
     }
     
     vector<int> path;
-    dfs(path, target);
+    dfs(path, target, flag);
     
     return 0;
 }
